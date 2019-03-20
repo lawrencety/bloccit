@@ -4,7 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.STRING
   }, {});
   Rule.associate = function(models) {
-    // associations can be defined here
+    Rule.belongsTo(models.Topic, {
+      foreignKey: 'topicId',
+      onDelete: 'CASCADE',
+    })
   };
   return Rule;
 };
