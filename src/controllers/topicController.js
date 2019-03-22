@@ -6,13 +6,13 @@ module.exports = {
       if(err) {
         res.redirect(500, 'static/index');
       } else {
-        res.render('topics/index', {title: 'Topics', topics});
+        res.render('topics/index', {topics});
       }
     })
   },
 
   new(req, res, next) {
-    res.render('topics/new', {title: 'New Topic'});
+    res.render('topics/new');
   },
 
   create(req, res, next) {
@@ -34,7 +34,7 @@ module.exports = {
       if (err || topic == null) {
         res.redirect(404, '/');
       } else {
-        res.render('topics/show', {title: topic.title, topic});
+        res.render('topics/show', {topic});
       }
     })
   },
