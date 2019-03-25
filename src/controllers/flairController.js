@@ -1,13 +1,12 @@
 const flairQueries = require('../db/queries.flair.js');
 
 module.exports = {
-
   show(req, res, next) {
     flairQueries.getFlair(req.params.id, (err, flair) => {
       if(err || flair == null) {
         res.redirect(404, '/');
       } else {
-        res.render(303, 'flairs/show', {flair});
+        res.render('flairs/show', {flair});
       }
     })
   },
@@ -30,5 +29,4 @@ module.exports = {
       }
     })
   },
-
 }

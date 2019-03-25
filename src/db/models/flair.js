@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     }
   }, {});
-  Flair.associate = function(models) {
+  Flair.associate = function(models){
     Flair.belongsTo(models.Post, {
       foreignKey: 'postId',
       onDelete: 'CASCADE'
