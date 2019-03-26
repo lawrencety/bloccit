@@ -44,11 +44,94 @@ describe('route : flair', () => {
     })
   })
 
-  describe('GET /topics/:topicId/posts/:postId/new', () => {
+  describe('GET /topics/:topicId/posts/:postId/flairs/new', () => {
     it('Should render a form for new flair', (done) => {
       request.get(`${base}${this.topic.id}/posts/${this.post.id}/flairs/new`, (err, res, body) => {
         expect(err).toBeNull();
+        expect(body).toContain('New Flair');
         done();
+      })
+    })
+  })
+
+  describe('GET /topics/:topicId/posts/:postId/flairs/show', () => {
+    it('Should render the view for a flair', (done) => {
+      request.get(`${base}${this.topic.id}/posts/${this.post.id}/flairs/${this.flair.id}`, (err, res, body) => {
+        expect(err).toBeNull();
+        expect(body).toContain('Royal');
+        done();
+      })
+    })
+  })
+
+  describe('POST /topics/:topicId/posts/:postId/flairs/create', () => {
+    it('Should render a new flair with the entered values', (done) => {
+      const options = {
+        url: `${base}${this.topic.id}/posts/${this.post.id}/flairs/create`,
+        form: {
+          name: 'Blood',
+          color: 'red'
+        }
+      }
+      request.post(options, (err, res, body) => {
+        Flair.findOne({
+          where: {name: 'Blood'}
+        })
+        .then((flair) => {
+          expect(flair).not.toBeNull();
+          expect(flair.name).toBe('Blood');
+          expect(flair.color).toBe('red');
+          expect(flair.postId).not.toBeNull();
+          done();
+        })
+        .catch((err) => {
+          console.log(err);
+          done()
+        })
+      })
+    })
+  })
+
+  describe('POST /topics/:topicId/posts/:postId/flairs/:id/destroy', () => {
+    it('Should delete the selected flair and redirect', (done) => {
+      request.post(`${base}${this.topic.id}/posts/${this.post.id}/flairs/${this.flair.id}/destroy`, (err, res, body) => {
+        Flair.findByPk(this.post.id)
+        .then((flair) => {
+          expect(err).toBeNull();
+          expect(flair).toBeNull();
+          done();
+        })
+      })
+    })
+  })
+
+  describe('GET /topics/:topicId/posts/:postId/flairs/:id/edit', () => {
+    it('Should render an edit view of the selected flair', (done) => {
+      request.get(`${base}${this.topic.id}/posts/${this.post.id}/flairs/${this.flair.id}/edit`, (err, res, body) => {
+        expect(err).toBeNull();
+        expect(body).toContain('Edit Flair')
+        done();
+      })
+    })
+  })
+
+  describe('POST /topics/:topicId/posts/:postId/flairs/:id/update', () => {
+    it('Should update the selected flair with the new values', (done) => {
+      const options = {
+        url: `${base}${this.topic.id}/posts/${this.post.id}/flairs/${this.flair.id}/update`,
+        form: {
+          name: 'Lavender'
+        }
+      }
+      request.post(options, (err, res, body) => {
+        expect(err).toBeNull();
+        Flair.findOne({
+          where: {id: this.flair.id}
+        })
+        .then((flair) => {
+          expect(flair.name).toBe('Lavender');
+          done();
+        })
       })
     })
   })

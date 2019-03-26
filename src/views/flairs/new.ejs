@@ -6,15 +6,15 @@
   <body>
     <% include ../static/partials/navbar.ejs %>
     <main class="container">
-      <h1>New Post</h1>
-      <form action="/topics/<%= topicId %>/posts/create" method="post">
+      <h1>New Flair</h1>
+      <form action="/posts/<%= postId %>/flairs/create" method="post">
         <div class="form-group">
-          <label for="title">Post title</label>
-          <input type="text" class="form-control" name="title" aria-describedby="titleHelp" placeholder="Enter Title">
+          <label for="title">Flair Name</label>
+          <input type="text" class="form-control" name="title" aria-describedby="titleHelp" placeholder="Enter Name">
         </div>
         <div class="form-group">
-          <label for="body">Post body</label>
-          <textarea name="body" rows="4" class="form-control" placeholder="Enter Post body"></textarea>
+          <label for="color">Flair Color</label>
+          <textarea name="color" rows="1" class="form-control" placeholder="Enter Flair color"></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>

@@ -1,6 +1,4 @@
-const Post = require('./models').Post;
-const Topic = require('./models').Topic;
-const Flair = requires('./models').Flair;
+const Flair = require('./models').Flair;
 
 module.exports = {
 
@@ -23,5 +21,35 @@ module.exports = {
       callback(err);
     })
   },
+
+  deleteFlair(id, callback) {
+    return Flair.destroy({
+      where: {id}
+    })
+    .then((deletedFlairs) => {
+      callback(null, deletedFlairs);
+    })
+    .catch((err) => {
+      callback(err);
+    })
+  },
+
+  updateFlair(id, updatedFlair, callback) {
+    return Flair.findByPk(id)
+    .then((flair) => {
+      if(!flair) {
+        return callback('Flair not found');
+      }
+      flair.update(updatedFlair, {
+        fields: Object.keys(updatedFlair)
+      })
+      .then(() => {
+        callback(null, flair);
+      })
+      .catch((err) => {
+        callback(err);
+      })
+    })
+  }
 
 };

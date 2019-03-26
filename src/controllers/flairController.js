@@ -7,13 +7,13 @@ module.exports = {
       if(err || flair == null) {
         res.redirect(404, '/');
       } else {
-        res.render(303, 'flairs/show', {flair});
+        res.render('flairs/show', {flair});
       }
     })
   },
 
   new(req, res, next) {
-    res.render(200, 'flairs/new', {postId: req.params.postId})
+    res.render('flairs/new', {postId: req.params.postId})
   },
 
   create(req, res, next) {
@@ -30,5 +30,35 @@ module.exports = {
       }
     })
   },
+
+  destroy(req, res, next) {
+    flairQueries.deleteFlair(req.params.id, (err, deletedFlairs) => {
+      if(err) {
+        res.redirect(500, `posts/${req.params.postId}/flairs/${req.params.id}`);
+      } else {
+        res.redirect(303, `posts/${req.params.postId}`);
+      }
+    })
+  },
+
+  edit(req, res, next) {
+    flairQueries.getFlair(req.params.id, (err, flair) => {
+      if(err || flair == null) {
+        res.redirect(404, `/`);
+      } else {
+        res.render('flairs/edit', {flair});
+      }
+    })
+  },
+
+  update(req, res, next) {
+    flairQueries.updateFlair(req.params.id, req.body, (err, flair) => {
+      if(err || flair == null) {
+        res.redirect(404, `posts/${req.params.postId}/flairs/${req.params.id}/edit`);
+      } else {
+        res.redirect(`posts/${req.params.postId}/flairs/${req.params.id}`);
+      }
+    })
+  }
 
 }
