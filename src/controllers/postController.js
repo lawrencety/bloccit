@@ -14,9 +14,9 @@ module.exports = {
     };
     postQueries.addPost(newPost, (err, post) => {
       if (err) {
-        res.redirect(500, '/posts/new');
+        res.redirect(500, 'posts/new');
       } else {
-        res.redirect(303, `/topics/${newPost.topicId}/posts/${post.id}`)
+        res.redirect(303, `topics/${newPost.topicId}/posts/${post.id}`)
       }
     })
   },
@@ -34,9 +34,9 @@ module.exports = {
   destroy(req, res, next) {
     postQueries.deletePost(req.params.id, (err, deletedRecordsCount) => {
       if(err) {
-        res.redirect(500, `/topics/${req.params.topicId}/posts/${req.params.id}`);
+        res.redirect(500, `topics/${req.params.topicId}/posts/${req.params.id}`);
       } else {
-        res.redirect(303, `/topics/${req.params.topicId}`);
+        res.redirect(303, `topics/${req.params.topicId}`);
       }
     })
   },
@@ -54,9 +54,9 @@ module.exports = {
   update(req, res, next) {
     postQueries.updatePost(req.params.id, req.body, (err, post) => {
       if(err || post == null) {
-        res.redirect(404, `/topics/${req.params.topicId}/posts/${req.params.id}/edit`);
+        res.redirect(404, `topics/${req.params.topicId}/posts/${req.params.id}/edit`);
       } else {
-        res.redirect(`/topics/${req.params.topicId}/posts/${post.id}`)
+        res.redirect(`topics/${req.params.topicId}/posts/${post.id}`)
       }
     })
   }
