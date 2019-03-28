@@ -55,9 +55,9 @@ module.exports = {
         callback(401);
       }
     })
-    .catch(err) => {
+    .catch((err) => {
       callback(err);
-    };
+    });
   },
 
   updateTopic(req, updatedTopic, callback) {
