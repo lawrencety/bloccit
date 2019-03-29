@@ -8,7 +8,7 @@
     <main class="container">
       <% include ../static/partials/messages.ejs %>
       <h1>New Post</h1>
-      <form action="/topics/<%= topicId %>/posts/create" method="post">
+      <form action="/posts/create" method="post">
         <div class="form-group">
           <label for="title">Post title</label>
           <input type="text" class="form-control" name="title" aria-describedby="titleHelp" placeholder="Enter Title">

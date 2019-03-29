@@ -4,8 +4,14 @@ module.exports = class ApplicationPolicy {
     this.record = record;
   }
 
+  _isMember() {
+    return this.user != null;
+  }
+
   _isOwner() {
-    return this.record && (this.record.userId == this.user.id);
+    if (this._isMember()) {
+      return this.record && (this.record.userId == this.user.id);
+    } else {false}
   }
 
   _isAdmin() {
