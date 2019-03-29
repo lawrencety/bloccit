@@ -171,4 +171,14 @@ describe('routes : post', () => {
     })
   })
 
+  describe('GET /posts/:postId/flairs/:id', () => {
+    it('Should render a view with the selected flair', (done) => {
+      request.get(`http://localhost:3000/posts/${this.post.id}/flairs/${this.flair.id}`, (err, res, body) => {
+        expect(err).toBeNull();
+        expect(body).toContain('Royal');
+        done();
+      })
+    })
+  })
+
 })
