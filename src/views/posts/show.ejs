@@ -12,13 +12,18 @@
         <button type="submit" class="btn btn-danger">Delete</button>
       </form>
       <p><%= post.body %></p>
-      <ul class="list-group">
-        <% if (post.flairs) { post.flairs.forEach((flair)=>{ %>
-        <li class="list-group-item">
-          <a href="/posts/<%= post.id %>/flairs/<%= flair.id %>"><%= flair.name %></a>
-        </li>
-        <% }) } %>
-      </ul> 
+      <section id="comment-form">
+        <% if(currentUser) { %>
+          <% include ../comments/new.ejs %>
+        <% } %>
+      </section>
+      <section id="comment-list">
+        <% if(post.comments) { %>
+          <% post.comments.forEach((comment) => { %>
+            <%- include(' ../comments/show.ejs', {comment}) %>
+          <% }) %>
+        <% } %>
+      </section>
     </main>
     <% include ../static/partials/baseScripts.ejs %>
   </body>
