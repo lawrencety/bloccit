@@ -120,6 +120,46 @@ describe('routes: comments', () => {
 
   })
 
+//TEST SUITE: NON-OWNER USER---------------------------------------------------------------------------------------------------------------------------------------------
+  describe('Non-owner user performing CRUD actions for Comment', () => {
+
+    beforeEach((done) => {
+      User.create({
+        email: 'rando@example.com',
+        password: 'password',
+        role: 'member'
+      });
+      request.get({
+        url: 'http://localhost:3000/auth/fake',
+        form: {
+          email: 'rando@example.com',
+          role: 'member',
+        }
+      }, (err, res, body) => {
+        done();
+      })
+    })
+
+    describe('POST /topics/:topicId/posts/:postId/comments/destroy', () => {
+      it('Should not delete a comment', (done) => {
+        Comment.findAll()
+        .then((comments) => {
+          const commentCountBeforeDelete = comments.length;
+          expect(commentCountBeforeDelete).toBe(1);
+          request.post(`${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`, (err, res, body) => {
+            Comment.findAll()
+            .then((comments) => {
+              expect(err).toBeNull();
+              expect(comments.length).toBe(commentCountBeforeDelete);
+              done();
+            })
+          })
+        })
+      })
+    })
+
+  })
+
 //TEST SUITE: OWNER USER---------------------------------------------------------------------------------------------------------------------------------------------
   describe('Member user performing CRUD actions for Comment', () => {
 
@@ -182,5 +222,44 @@ describe('routes: comments', () => {
 
   })
 
+//TEST SUITE: ADMIN USER---------------------------------------------------------------------------------------------------------------------------------------------
+  describe('Admin user performing CRUD actions for Comment', () => {
+
+    beforeEach((done) => {
+      User.create({
+        email: 'admin@example.com',
+        password: 'supersecurepassword',
+        role: 'admin'
+      });
+      request.get({
+        url: 'http://localhost:3000/auth/fake',
+        form: {
+          role: 'admin'
+        }
+      }, (err, res, body) => {
+        done();
+      })
+    })
+
+    describe('POST /topics/:topicId/posts/:postId/comments/destroy', () => {
+      it('Should delete a comment', (done) => {
+        Comment.findAll()
+        .then((comments) => {
+          const commentCountBeforeDelete = comments.length;
+          expect(commentCountBeforeDelete).toBe(1);
+          request.post(`${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`, (err, res, body) => {
+            expect(res.statusCode).toBe(302);
+            Comment.findAll()
+            .then((comments) => {
+              expect(err).toBeNull();
+              expect(comments.length).toBe(commentCountBeforeDelete - 1);
+              done();
+            })
+          })
+        })
+      })
+    })
+
+  })
 
 })
