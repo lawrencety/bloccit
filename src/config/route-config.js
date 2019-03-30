@@ -1,5 +1,3 @@
-const environment = process.env.NODE_ENV || 'test';
-
 module.exports = {
   init(app) {
     const staticRoutes = require('../routes/static');
@@ -7,8 +5,9 @@ module.exports = {
     const advertisementRoutes = require('../routes/advertisements');
     const postRoutes = require('../routes/posts');
     const userRoutes = require('../routes/users');
+    const commentRoutes = require('../routes/comments');
 
-    if(environment === 'test') {
+    if(process.env.NODE_ENV === 'test') {
       const mockAuth = require('../../spec/support/mock-auth.js');
       mockAuth.fakeIt(app);
     };
@@ -18,5 +17,6 @@ module.exports = {
     app.use(advertisementRoutes);
     app.use(postRoutes);
     app.use(userRoutes);
+    app.use(commentRoutes);
   }
 }
