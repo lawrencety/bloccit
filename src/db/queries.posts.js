@@ -3,6 +3,7 @@ const Topic = require('./models').Topic;
 const Comment = require('./models').Comment;
 const User = require('./models').User;
 
+
 module.exports = {
   addPost(newPost, callback) {
     return Post.create(newPost)
