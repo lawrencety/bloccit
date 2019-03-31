@@ -161,6 +161,58 @@ describe('routes: votes', () => {
       })
     })
 
+    describe('Vote should not have a value other than 1 or -1', () => {
+      it('Should not create a vote with an invalid value', (done) => {
+        Vote.create({
+          value: 2,
+          postId: this.post.id,
+          userId: this.user.id
+        })
+        .then((vote) => {
+          done();
+        })
+        .catch((err) => {
+          expect(err.message).toContain('Validation error');
+          done();
+        })
+      })
+    })
+
+    describe('There should not be more than one vote per user per post', () => {
+      it('Should overwrite the previous vote', (done) => {
+        const options = {
+          url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`
+        };
+        request.get(options, (err, res, body) => {
+          Vote.findAll({
+            where: {
+              postId: this.post.id,
+              userId: this.user.id
+            }
+          })
+          .then((votes) => {
+            expect(votes.length).toBe(1);
+            request.get(options, (err, res, body) => {
+              Vote.findAll({
+                where: {
+                  postId: this.post.id,
+                  userId: this.user.id
+                }
+              })
+              .then((votes) => {
+                expect(votes.length).toBe(1);
+                done();
+              })
+            })
+          })
+          .catch((err) => {
+            console.log(err);
+            done();
+          })
+        })
+      })
+    })
+
   })
 
 })

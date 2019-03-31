@@ -5,6 +5,7 @@ const sequelize = require('../../src/db/models/index').sequelize;
 const Topic = require('../../src/db/models').Topic;
 const Post = require('../../src/db/models').Post;
 const User = require('../../src/db/models').User;
+const Vote = require('../../src/db/models').Vote;
 
 describe('routes : post', () => {
 
@@ -169,6 +170,61 @@ describe('routes : post', () => {
         })
       })
     })
+  })
+
+  describe('Voting methods', () => {
+
+    beforeEach((done) => {
+      request.get({
+        url: 'http://localhost:3000/auth/fake',
+        form: {
+          userId: this.user.id
+        }
+      }, (err, res, body) => {
+        done();
+      })
+    })
+
+    describe('getPoints()', () => {
+      it('Should get the total number of points on a given post', (done) => {
+        const currentPoints = this.post.getPoints();
+        expect(currentPoints).toBe(0);
+        const options = {
+          url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`
+        };
+        request.get(options, (err, res, body) => {
+          expect(this.post.getPoints()).toBe(currentPoints + 1);
+          done();
+        })
+      })
+    })
+
+    describe('hasUpvoteFor(:user)', () => {
+      it('Should return true if there is an upvote for the entered user in the post', (done) => {
+        expect(this.post.hasUpvoteFor(this.user)).toBe(false);
+        const options = {
+          url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`
+        };
+        request.get(options, (err, res, body) => {
+          expect(this.post.hasUpvoteFor(this.user)).toBe(true);
+          done();
+        })
+      })
+    })
+
+    describe('hasDownvoteFor(:user)', () => {
+      it('Should return true if there is a downvote for the entered user in the post', (done) => {
+        expect(this.post.hasDownvoteFor(this.user)).toBe(false);
+        const options = {
+          url: `${base}${this.topic.id}/posts/${this.post.id}/votes/downvote`
+        };
+        request.get(options, (err, res, body) => {
+          expect(this.post.hasDownvoteFor(this.user)).toBe(true);
+          done();
+        })
+      })
+    })
+
   })
 
 })
