@@ -35,45 +35,46 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'postId',
       as: 'votes'
     });
-  };
-  Post.prototype.getPoints = function() {
-    console.log(this.votes);
-    if(this.votes.length === 0) {
-      return 0
-    }
-    return this.votes
-    .map((v) => {return v.value})
-    .reduce((prev, next) => {return prev + next})
-  };
 
-  Post.prototype.hasUpvoteFor = function(user) {
-    this.votes.findOne({
-      where: {
-        user: user.id
+    Post.prototype.getPoints = function() {
+      if(this.votes.length === 0) {
+        return 0
       }
-      .then((vote) => {
-        if(vote && vote.value == 1) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-    })
-  };
+      return this.votes
+      .map((v) => {return v.value})
+      .reduce((prev, next) => {return prev + next})
+    };
 
-  Post.prototype.hasDownvoteFor = function(user) {
-    this.votes.findOne({
-      where: {
-        user: user.id
-      }
-      .then((vote) => {
-        if(vote && vote.value == -1) {
-          return true;
-        } else {
-          return false;
+    Post.prototype.hasUpvoteFor = function(user) {
+      this.votes.findOne({
+        where: {
+          user: user.id
         }
+        .then((vote) => {
+          if(vote && vote.value == 1) {
+            return true;
+          } else {
+            return false;
+          }
+        })
       })
-    })
+    };
+
+    Post.prototype.hasDownvoteFor = function(user) {
+      this.votes.findOne({
+        where: {
+          user: user.id
+        }
+        .then((vote) => {
+          if(vote && vote.value == -1) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+      })
+    };
+
   };
 
   return Post;

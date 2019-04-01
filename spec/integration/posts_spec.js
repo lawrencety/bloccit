@@ -22,12 +22,7 @@ describe('routes : post', () => {
         this.user = user;
         Topic.create({
           title: 'Winter Games',
-          description: 'Post your Winter Games stories',
-          posts: [{
-            title: 'Snowball Fighting',
-            body: 'So much snow!',
-            userId: this.user.id
-          }]
+          description: 'Post your Winter Games stories'
         },
         { include: {
           model: Post,
@@ -36,9 +31,22 @@ describe('routes : post', () => {
         })
         .then((topic) => {
           this.topic = topic;
-          this.post = topic.posts[0];
-          done();
-        });
+          Post.create({
+            title: 'Snowball Fighting',
+            body: 'So much snow!',
+            userId: this.user.id,
+            topicId: this.topic.id
+          },
+          { include: [{
+            model: Vote,
+            as: 'votes'
+            }]
+          })
+          .then((post) => {
+            this.post = post;
+            done();
+          });
+        })
       })
     })
   });
