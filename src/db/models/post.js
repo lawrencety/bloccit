@@ -47,12 +47,12 @@ module.exports = (sequelize, DataTypes) => {
 
     Post.prototype.hasUpvoteFor = function(userId) {
       return (this.votes
-      .filter((v) => {return (v.userId == userId && v.value == 1)}).length) > 0;
+      .filter((v) => {return (v.userId === userId && v.value === 1)}).length) > 0;
     };
 
     Post.prototype.hasDownvoteFor = function(userId) {
       return (this.votes
-      .filter((v) => {return (v.userId == userId && v.value == -1)}).length) > 0;
+      .filter((v) => {return (v.userId === userId && v.value === -1)}).length) > 0;
     };
 
   };
