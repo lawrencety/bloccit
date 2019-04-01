@@ -45,34 +45,14 @@ module.exports = (sequelize, DataTypes) => {
       .reduce((prev, next) => {return prev + next})
     };
 
-    Post.prototype.hasUpvoteFor = function(user) {
-      this.votes.findOne({
-        where: {
-          user: user.id
-        }
-        .then((vote) => {
-          if(vote && vote.value == 1) {
-            return true;
-          } else {
-            return false;
-          }
-        })
-      })
+    Post.prototype.hasUpvoteFor = function(userId) {
+      return (this.votes
+      .filter((v) => {return (v.userId == userId && v.value == 1)}).length) > 0;
     };
 
-    Post.prototype.hasDownvoteFor = function(user) {
-      this.votes.findOne({
-        where: {
-          user: user.id
-        }
-        .then((vote) => {
-          if(vote && vote.value == -1) {
-            return true;
-          } else {
-            return false;
-          }
-        })
-      })
+    Post.prototype.hasDownvoteFor = function(userId) {
+      return (this.votes
+      .filter((v) => {return (v.userId == userId && v.value == -1)}).length) > 0;
     };
 
   };
