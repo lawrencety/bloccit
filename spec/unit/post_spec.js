@@ -2,6 +2,7 @@ const sequelize = require('../../src/db/models/index').sequelize;
 const Topic = require('../../src/db/models').Topic;
 const Post = require('../../src/db/models').Post;
 const User = require('../../src/db/models').User;
+const Vote = require('../../src/db/models').Vote;
 
 describe('Post', () => {
   beforeEach((done) => {
@@ -21,7 +22,8 @@ describe('Post', () => {
           posts: [{
             title: 'My first visit to Proxima Centauri B',
             body: 'I saw some rocks.',
-            userId: this.user.id
+            userId: this.user.id,
+            votes: []
           }]
         },
         { include: {
@@ -126,6 +128,56 @@ describe('Post', () => {
         done();
       })
     })
+  })
+
+  describe('Voting methods', () => {
+
+    describe('getPoints()', () => {
+      it('Should get the total number of points on a given post', (done) => {
+        const currentPoints = this.post.getPoints();
+        expect(currentPoints).toBe(0);
+        Vote.create({
+          value: 1,
+          postId: this.post.id,
+          userId: this.user.id
+        })
+        .then((vote) => {
+          expect(this.post.getPoints()).toBe(currentPoints + 1);
+          done();
+        })
+      })
+    })
+
+    describe('hasUpvoteFor(:user)', () => {
+      it('Should return true if there is an upvote for the entered user in the post', (done) => {
+        expect(this.post.hasUpvoteFor(this.user)).toBe(false);
+        Vote.create({
+          value: 1,
+          postId: this.post.id,
+          userId: this.user.id
+        })
+        .then((vote) => {
+          expect(this.post.hasUpvoteFor(this.user)).toBe(true);
+          done();
+        })
+      })
+    })
+
+    describe('hasDownvoteFor(:user)', () => {
+      it('Should return true if there is a downvote for the entered user in the post', (done) => {
+        expect(this.post.hasDownvoteFor(this.user)).toBe(false);
+        Vote.create({
+          value: -1,
+          postId: this.post.id,
+          userId: this.user.id
+        })
+        .then((vote) => {
+          expect(this.post.hasDownvoteFor(this.user)).toBe(true);
+          done();
+        })
+      })
+    })
+
   })
 
 })

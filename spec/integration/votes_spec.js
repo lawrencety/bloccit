@@ -81,7 +81,6 @@ describe('routes: votes', () => {
         const options = {
           url: `${base}${this.topic.id}/posts/${this.post.id}/votes/upvote`
         };
-        console.log(this.post.votes);
         request.get(options, (err, res, body) => {
           Vote.findOne({
             where: {postId: this.post.id}
