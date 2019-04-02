@@ -6,19 +6,14 @@ const Authorizer = require('../policies/favorite');
 
 module.exports = {
   createFavorite(req, callback) {
-    console.log('CALLING CREATE')
-    console.log(req.params.postId)
-    console.log(req.user.id)
     return Favorite.create({
       postId: req.params.postId,
       userId: req.user.id
     })
     .then((favorite) => {
-      console.log('...CREATED');
       callback(null, favorite);
     })
     .catch((err) => {
-      console.log('error');
       callback(err);
     })
   },

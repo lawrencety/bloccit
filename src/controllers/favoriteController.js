@@ -4,7 +4,6 @@ module.exports = {
 
   create(req, res, next) {
     if(req.user) {
-      console.log('CALLING QUERY')
       favoriteQueries.createFavorite(req, (err, favorite) => {
         if(err) {
           req.flash('error', err);
