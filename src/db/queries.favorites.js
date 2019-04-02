@@ -14,10 +14,11 @@ module.exports = {
       userId: req.user.id
     })
     .then((favorite) => {
-      console.log('...CREATED')
+      console.log('...CREATED');
       callback(null, favorite);
     })
     .catch((err) => {
+      console.log('error');
       callback(err);
     })
   },

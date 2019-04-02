@@ -1,7 +1,7 @@
 const request = require('request');
 const sequelize = require('../../src/db/models/index').sequelize;
 const server = require('../../src/server');
-const base = 'http://localhost:3000/topics/'
+const base = 'http://localhost:3000/topics/';
 
 const Topic = require('../../src/db/models').Topic;
 const Post = require('../../src/db/models').Post;
@@ -73,10 +73,12 @@ describe('routes: favorite', () => {
         let favCountBeforeCreate;
         this.post.getFavorites()
         .then((favorites) => {
+          console.log('found', favorites)
           favCountBeforeCreate = favorites.length;
           request.post(options, (err, res, body) => {
             this.post.getFavorites()
             .then((newFavorites) => {
+              console.log('found', newFavorites)
               expect(newFavorites.length).toBe(favCountBeforeCreate);
               done();
             })
@@ -120,7 +122,7 @@ describe('routes: favorite', () => {
           .then((favorite) => {
             expect(favorite).not.toBeNull();
             expect(favorite.userId).toBe(this.user.id);
-            expect(favorite.postId).toBe(this.post.id)
+            expect(favorite.postId).toBe(this.post.id);
             done();
           })
           .catch((err) => {
@@ -136,14 +138,13 @@ describe('routes: favorite', () => {
         const options = {
           url: `${base}${this.topic.id}/posts/${this.post.id}/favorites/create`
         };
-        let favCountBeforeDelete;
         request.post(options, (err, res, body) => {
-          this.post.getFavorites()
+          Favorite.findAll()
           .then((favorites) => {
-            favCountBeforeDelete = favorites.length;
-            let favorite = favorites[0];
-            request.post(`${base}${this.topic.id}/posts/${this.post.id}/favorites/${favorite.id}/destroy`, (err, res, body) => {
-              this.post.getFavorites()
+            let favCountBeforeDelete = favorites.length;
+            this.favorite = favorites[0];
+            request.post(`${base}${this.topic.id}/posts/${this.post.id}/favorites/${this.favorite.id}/destroy`, (err, res, body) => {
+              Favorite.findAll()
               .then((newFavorites) => {
                 expect(newFavorites.length).toBe(favCountBeforeDelete - 1);
                 done();

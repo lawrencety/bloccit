@@ -69,7 +69,7 @@ describe('Favorite', () => {
         postId: this.post.id,
         userId: this.user.id
       })
-      .then((favorite) => {
+      .then((favorite) => { 
         expect(favorite.postId).toBe(this.post.id);
         expect(favorite.userId).toBe(this.user.id);
         done();
