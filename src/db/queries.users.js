@@ -33,10 +33,14 @@ module.exports = {
           Comment.scope({ method: ['lastFiveFor', id]}).findAll()
           .then((comments) => {
             result['comments'] = comments;
-            callback(null, result);
-          })
-          .catch((err) => {
-            callback(err);
+            User.scope({ method: ['favoritePosts', id]}).findAll()
+            .then((favoritePosts) => {
+              result['favoritePosts'] = favoritePosts;
+              callback(null, result);
+            })
+            .catch((err) => {
+              callback(err);
+            })
           })
         })
       }
