@@ -20,15 +20,17 @@ module.exports = {
 
   deleteFavorite(req, callback) {
     const id = req.params.id;
-    return Favorite.findByPk(id)
+    return Favorite.findOne({
+      where: {id: id}
+    })
     .then((favorite) => {
       if(!favorite) {
         return callback('Favorite not found');
       }
       const authorized = new Authorizer(req.user, favorite).destroy();
       if(authorized) {
-        Favorite.destroy({
-          where: {id}
+        return Favorite.destroy({
+          where: {id: id}
         })
         .then((deletedRecordsCount) => {
           callback(null, deletedRecordsCount);
