@@ -1,6 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('../db/models');
+const User = require('../db/models').User;
 const authHelper = require('../auth/helpers');
 
 module.exports = {
@@ -14,7 +14,6 @@ module.exports = {
         where: {email: email}
       })
       .then((user) => {
-        console.log(user);
         if(!user || !authHelper.comparePass(password, user.password)) {
           return done(null, false, {message: 'Invalid email or password'})
         }
@@ -25,7 +24,7 @@ module.exports = {
       callback(null, user.id);
     })
     passport.deserializeUser((id, callback) => {
-      User.findbyPk(id)
+      User.findByPk(id)
       .then((user) => {
         callback(null, user);
       })
