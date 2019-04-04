@@ -82,5 +82,34 @@ describe('routes: users', () => {
     })
   })
 
+  describe('POST /users/sign_in', () => {
+    it('Should sign in a user with valid values and redirect', (done) => {
+      const options = {
+        url: base,
+        form: {
+          email: 'user@example.com',
+          password: 'password'
+        }
+      }
+      request.post(options, (err, res, body) => {
+        User.findOne({where: {email: 'user@example.com'}})
+        .then((user) => {
+          expect(user).not.toBeNull();
+          const newOptions = {
+            url: `${base}sign_in`,
+            form: {
+              email: 'user@example.com',
+              password: 'password'
+            }
+          }
+          request.post(newOptions, (err, res, body) => {
+            expect(err).toBeNull();
+            console.log(res.statusCode);
+            done();
+          })
+        })
+      })
+    })
+  })
 
 })

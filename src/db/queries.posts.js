@@ -30,7 +30,7 @@ module.exports = {
       if(authorized) {
         post.destroy()
         .then((res) => {
-          callback(null, post);
+          callback(null, res);
         })
       } else {
         req.flash('notice', 'You are not authorized to do that');
